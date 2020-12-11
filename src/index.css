@@ -1,13 +1,17 @@
+@font-face {
+  font-family: "SpecilElite-Regular";
+  src: url("./utils/fonts/SpecialElite-Regular.woff2") format("woff2"),
+    url("./utils/fonts/SpecialElite-Regular.woff") format("woff"),
+    url("./utils/fonts/SpecialElite-Regular.ttf") format("truetype");
+}
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "SpecilElite-Regular", Fallback, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
