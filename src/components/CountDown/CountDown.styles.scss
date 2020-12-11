@@ -1,0 +1,14 @@
+.watchImg {
+  width: 50px;
+}
+.resetImg {
+  width: 45px;
+}
+.controlButton {
+  width: 40px;
+  height: 40px;
+  &_reset {
+    margin-left: 30px !important;
+    margin-top: 5px !important;
+  }
+}
