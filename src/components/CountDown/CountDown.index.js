@@ -1,35 +1,71 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./CountDown.styles.scss";
 import { IconButton } from "@material-ui/core";
 import start_Watch from "../../utils/images/startStopWatch.png";
 import stop_Watch from "../../utils/images/stopStopWatch.png";
-import reset_Watch from "../../utils/images/resetWatch.png";
+// import reset_Watch from "../../utils/images/resetWatch.png";
+import { MinuteContext } from "../Store/Context";
 
-export default class CountDown extends Component {
-  state = {
-    isVisible: true,
-    isDisable: true,
+const CountDown = () => {
+  const min = useContext(MinuteContext);
+  const [isVisible, setIsVisible] = useState(true);
+  // const [resetDisable, setResetDisable] = useState(true);
+  const [stop, setStop] = useState(false);
+
+  const handleStart = () => {
+    setIsVisible(!isVisible);
+    // setResetDisable(false);
   };
-  handleStart = () => {
-    this.setState({ isVisible: !this.state.isVisible });
-    this.setState({ isDisable: false });
+
+  const handleStop = () => {
+    setIsVisible(!isVisible);
   };
-  handleStop = () => {
-    this.setState({ isVisible: !this.state.isVisible });
+
+  // const handleReset = () => {
+  //   setIsVisible(true);
+  //   setResetDisable(!resetDisable);
+  //   min.dispatch({ type: "CHANGE_TIME", payload: 1 });
+  //   setStop(false);
+  // };
+
+  const countDown = () => {
+    let secondsLeft = min.minute - 1;
+    min.dispatch({ type: "CHANGE_TIME", payload: secondsLeft });
   };
-  handleReset = () => {
-    this.setState({ isVisible: true });
-    this.setState({ isDisable: !this.state.isDisable });
+
+  const handletoggle = () => {
+    setStop(!stop);
   };
-  render() {
-    const { isVisible, isDisable } = this.state;
-    return (
-      <div>
+
+  useEffect(() => {
+    if (min.minute === 0 && !isVisible) {
+      setIsVisible(!isVisible);
+      setStop(!stop);
+    }
+    let interval = null;
+    if (stop && min.minute >= 1) {
+      interval = setInterval(() => countDown(), 1000);
+    } else if (!stop && min.minute !== 0) {
+      clearInterval(interval);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stop, min.minute]);
+
+  return (
+    <div className="countdownContainer">
+      <div> Time Left : {min.minute} sec</div>
+      <div className="countdownControls">
         {isVisible ? (
           <IconButton
             aria-label="delete"
             className="controlButton"
-            onClick={this.handleStart}
+            onClick={() => {
+              handletoggle();
+              handleStart();
+            }}
           >
             <img src={start_Watch} alt="Start" className="watchImg" />
           </IconButton>
@@ -37,20 +73,25 @@ export default class CountDown extends Component {
           <IconButton
             aria-label="delete"
             className="controlButton"
-            onClick={this.handleStop}
+            onClick={() => {
+              handleStop();
+              handletoggle();
+            }}
           >
             <img src={stop_Watch} alt="Stop" className="watchImg" />
           </IconButton>
         )}
-        <IconButton
+        {/* <IconButton
           aria-label="delete"
           className="controlButton controlButton_reset"
-          onClick={this.handleReset}
-          disabled={isDisable}
+          onClick={() => handleReset()}
+          disabled={resetDisable}
         >
           <img src={reset_Watch} alt="Reset" className="watchImg resetImg" />
-        </IconButton>
+        </IconButton> */}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default CountDown;

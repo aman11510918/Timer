@@ -1,31 +1,38 @@
-import React from "react";
+import React, { useContext } from "react";
+import "./MinuteSlider.styles.scss";
 import Grid from "@material-ui/core/Grid";
 import { Typography, Slider, Input } from "@material-ui/core";
-import "./MinuteSlider.styles.scss";
+import { MinuteContext } from "../Store/Context";
 
 const MinuteSlider = () => {
-  const [value, setValue] = React.useState(1);
+  const min = useContext(MinuteContext);
+
+  const [value, setValue] = React.useState(min.minute);
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
+    min.dispatch({ type: "CHANGE_TIME", payload: newValue });
   };
 
   const handleInputChange = (event) => {
     setValue(event.target.value === "" ? "" : Number(event.target.value));
+    min.dispatch({ type: "CHANGE_TIME", payload: event.target.value });
   };
 
   const handleBlur = () => {
     if (value < 1) {
       setValue(1);
+      min.dispatch({ type: "CHANGE_TIME", payload: 1 });
     } else if (value > 60) {
       setValue(60);
+      min.dispatch({ type: "CHANGE_TIME", payload: 60 });
     }
   };
 
   return (
     <div className="sliderContainer">
       <Typography className="minutesLabel" id="input-slider" gutterBottom>
-        Minutes
+        Choose atleast 1 second
       </Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item xs>
